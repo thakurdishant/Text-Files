@@ -1,0 +1,31 @@
+db.getCollection('Employee').find({})
+db.Employee.insert({"name":"chandu","gender":"male"})
+db.Employee.insert({"name":"jamath","gender":"female","condition":"not stable"})
+db.Employee.update({"name":"jamath"},{"name":"jamath","gender":"male","condition":"stable"})
+db.Employee.deleteOne({"name":"jamath"},{})
+db.Employee.deleteOne({"condition":"stable"},{})
+db.Employee.getName({"name":"jamath"})
+db.Employee.getFullName({"name":"jamath"})
+
+
+db.getCollection('Employee').find({})
+db.Employee.createIndex({"name":1})
+db.Employee.createIndex({"options":1})
+db.Employee.find({}).sort({"name":1})
+db.Employee.update({"name":"sushmitha"},
+{
+    "name":"sushmitha",
+    "options":{
+        "phone":{
+        "phoneno1":7286813323,
+        "phoneno2":9959798175
+        },
+        "services":
+        {
+            "phone1":"airtel",
+            "phone2":"idea"
+        }
+    }
+})
+db.Employee.find({})
+db.Employee.find({"name":1}).sort({"options":1})

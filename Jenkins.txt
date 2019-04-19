@@ -1,0 +1,44 @@
+(Building service:)
+============================================================================================================
+echo "Step-1 Maven build started."
+cd SMM
+cd Microservices-OrderMyFood
+
+
+sudo git pull
+
+
+cd OMF-service-registry
+
+
+sudo mvn clean install
+
+
+echo "Step-1 completed.."
+================================================================================================================
+
+(Deploying service: )
+=================================================================================================================
+echo "Step-2 Stopping existing docker."
+cd OMF
+cd Microservices-OrderMyFood
+sudo git pull
+
+
+cd OMF-service-registry
+
+
+sudo docker container stop eurekacontainer
+sudo docker rm $(sudo docker ps -a -q)
+
+
+echo "Step-2 completed."
+
+
+echo "Step-3 Creating new image."
+
+
+sudo docker build -t eureka .
+
+sudo nohup docker run -p 8761:8761 --name eurekacontainer eureka < /dev/null >> /home/vmadmin/OMF/Logs/Registry.log 2>&1 &
+echo "Step-3 completed."

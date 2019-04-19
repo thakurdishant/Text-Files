@@ -1,0 +1,27 @@
+1.) Retrieve the details of students whose marks_2 is greater than 40 and less than 80.
+select s.S_Id,s.S_fName,s.S_lName from student as s,marks as m where s.S_Id = m.S_Id and m.marks2>40 and m.marks2<80 ;
+
+2.)Retrieve the details of students in descending order based on their first name.
+select * from student order by S_fName desc;
+
+3.)Retrieve the details of students in ascending order based on their age.
+select * from student order by S_age;
+
+4.)Retrieve the details of students whose marks_2 is second highest marks_2.
+select s.S_Id,s.S_fName,s.S_lName from student as s,marks as m where s.S_Id = m.S_Id order by marks2 desc limit 0,2;
+
+5.)Retreive the details of students whose name starts with "a" and mobile number starts with "9.
+select s.S_Id,s.S_fName from student as s,marks as m,mobile as mo where s.S_Id = m.S_Id and s.S_Id = mo.S_Id and s.S_fName like "a%" and mo.mobileNo like "9%";
+
+6.)Retreive the count of students from each state.
+select state, count(state) from address group by state;
+
+7.)Retreive the Sdetails of students whose average of marks_1 and marks_2 is greater than 65.
+select s.S_Id,s.S_fName,s.S_lName from student as s,marks as m where s.S_Id = m.S_Id  and (m.marks1+m.marks2)/2>65;
+
+8.)Retrieve all details of each student.
+select s.S_Id,s.S_fName,s.S_age,m.marks1,m.marks2,a.street,a.city,a.dist,a.state,a.pin,mo.mobileNo
+from student s
+inner join marks m on s.S_Id = m.S_Id
+inner join address a on s.S_Id = a.S_Id
+inner join mobile mo on s.S_Id = mo.S_Id;

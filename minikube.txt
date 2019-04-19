@@ -1,0 +1,47 @@
+(install minikube)
+
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+==================================================================================================================================================================
+sudo minikube start --vm-driver kvm2 --mount-string="/home/vmadmin/SMM/SellMobiles-Microservices/SMM-service_registry:/data" --mount
+
+sudo minikube ssh
+
+cd /data
+
+sudo docker build --file Dockerfile --tag=eurekakube:latest --rm=true .
+
+sudo kubectl run eurekakube --image=eurekakube:latest --requests=cpu=200m --port=8761 --image-pull-policy Never
+
+kubectl get deployments
+
+kubectl get pods
+
+sudo kubectl expose deployment eurekakube --type=NodePort
+
+(for autoscaling)
+kubectl autoscale deployment eureka --cpu-percent=50 --min=1 --max=5
+
+minikube service eurekakube
+
+====================================================================================================================================
+sudo minikube status
+
+sudo kubectl get hpa
+
+sudo kubectl get deployment smmkube
+
+(to check port)
+sudo kubectl get service
+
+(to check url)
+sudo kubectl describe service
+
+======================================================================================
+sudo kubectl autoscale deployment smmkube --min=2 --max=10
+========================================================================================
+(for hitting and checking load)
+while true; do wget -q -O- http://192.168.39.6:31049/; done
+=======================================================================================
+(deleting autoscale)
+kubectl delete hpa eurekakube

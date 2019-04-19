@@ -1,0 +1,174 @@
+https://beginnersbook.com/2017/09/mongodb-indexing-tutorial-with-example/
+
+
+C:\Users\M1050686>cd ..
+
+C:\Users>cd ..
+
+C:\>cd "Program Files"
+
+C:\Program Files>cd MongoDB
+
+C:\Program Files\MongoDB>cd Server
+
+C:\Program Files\MongoDB\Server>cd 3.4
+
+C:\Program Files\MongoDB\Server\3.4>cd bin
+
+C:\Program Files\MongoDB\Server\3.4\bin>mongo
+
+MongoDB shell version v3.4.18-32-ga2d97db8fe
+connecting to: mongodb://127.0.0.1:27017
+MongoDB server version: 3.4.18-32-ga2d97db8fe
+Server has startup warnings:
+2019-04-08T19:32:29.041+0530 I CONTROL  [initandlisten]
+2019-04-08T19:32:29.041+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2019-04-08T19:32:29.044+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2019-04-08T19:32:29.045+0530 I CONTROL  [initandlisten]
+
+
+
+> show databases;
+Demo     0.000GB
+admin    0.000GB
+local    0.000GB
+student  0.000GB
+webflux  0.000GB
+
+
+> use student;
+switched to db student
+
+
+> show collections;
+student
+
+
+> db.getCollection('student').find();
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21, "location" : "Ladakh", "dob" : "18/10/1998", "_class" : "com.mindtree.entity.Student" }
+{ "_id" : 101, "name" : "Moksh", "age" : 21, "location" : "Mohali", "dob" : "03/02/1998", "_class" : "com.mindtree.entity.Student" }
+{ "_id" : 103, "name" : "Vishal", "age" : 22, "location" : "Patiala", "dob" : "19/01/1997", "_class" : "com.mindtree.entity.Student" }
+
+
+> db.getCollection('student').find().pretty();
+{
+        "_id" : 102,
+        "name" : "Abhimanyu",
+        "age" : 21,
+        "location" : "Ladakh",
+        "dob" : "18/10/1998",
+        "_class" : "com.mindtree.entity.Student"
+}
+{
+        "_id" : 101,
+        "name" : "Moksh",
+        "age" : 21,
+        "location" : "Mohali",
+        "dob" : "03/02/1998",
+        "_class" : "com.mindtree.entity.Student"
+}
+{
+        "_id" : 103,
+        "name" : "Vishal",
+        "age" : 22,
+        "location" : "Patiala",
+        "dob" : "19/01/1997",
+        "_class" : "com.mindtree.entity.Student"
+}
+
+
+> db.student.createIndex({name:1});
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 5,
+        "numIndexesAfter" : 5,
+        "note" : "all indexes already exist",
+        "ok" : 1
+}
+
+
+> db.student.getIndexes();
+[
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "student.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "name" : 1
+                },
+                "name" : "name_1",
+                "ns" : "student.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "age" : 1
+                },
+                "name" : "age_1",
+                "ns" : "student.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "location" : 1
+                },
+                "name" : "location_1",
+                "ns" : "student.student"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "dob" : 1
+                },
+                "name" : "dob_1",
+                "ns" : "student.student"
+        }
+]
+
+
+> db.student.find({},{name:1}).sort({age:-1});
+{ "_id" : 103, "name" : "Vishal" }
+{ "_id" : 101, "name" : "Moksh" }
+{ "_id" : 102, "name" : "Abhimanyu" }
+
+
+> db.student.find({},{name:1, age:1}).sort({age:-1});
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+
+
+> db.student.find({},{name:1, age:1}).sort({age:1});
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+
+
+> db.student.find({},{name:-11, age:1}).sort({age:1});
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+
+
+> db.student.find({},{name:-1, age:1}).sort({age:1});
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+
+
+> db.student.find({},{name:-1, age:1}).sort({_id:-1});
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }
+
+
+> db.student.find({},{name:-1, age:1}).sort({_id:-1}).pretty();
+{ "_id" : 103, "name" : "Vishal", "age" : 22 }
+{ "_id" : 102, "name" : "Abhimanyu", "age" : 21 }
+{ "_id" : 101, "name" : "Moksh", "age" : 21 }

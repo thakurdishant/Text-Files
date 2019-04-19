@@ -1,0 +1,11 @@
+db.product.insertMany([
+{"id":101,"name":"Horlics","price":200},
+{"id":102,"name":"BournVita","price":250},
+{"id":103,"name":"Complan","price":250},
+])
+
+db.getCollection('product').remove({"name":"Complan"})
+db.product.update({"id":102},{$set:{"name":"Complan"}})
+
+
+mongoimport --db demoDB --collection demo D:/demo.json --jsonArray

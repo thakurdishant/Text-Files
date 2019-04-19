@@ -1,0 +1,52 @@
+Dockerfile
+############################################################################
+FROM maven:3.6-jdk-8-alpine as build
+ADD ./ app/
+WORKDIR /app
+RUN mvn install
+
+FROM openjdk:8-jdk-alpine
+COPY --from=build /app/target/SMM-server.jar SMM-server.jar
+EXPOSE 8761
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod","SMM-server.jar"]
+##############################################################################
+
+
+===================================================================================================================
+Commands
+==================================================================================================================
+(To build in the docker) (. means that create image in current directory)
+sudo docker build -t (nameof the image u want to give) . 
+
+(to run container)
+sudo nohup docker run -p 8761:8761 --name eurekacontainer eureka < /dev/null >> /home/vmadmin/SMM/Logs/Search.log 2>&1 &
+
+(to check running containers)
+sudo docker ps
+
+(remove running container based on image id)
+sudo docker container rm -f 0bbbae4119f3
+
+(check existing images)
+sudo docker image ls
+
+
+############################################################################################################################
+
+kubeadm join 13.71.119.18:6443 --token z2up9x.uauuf5vw8pqe2b41 \
+    --discovery-token-ca-cert-hash sha256:3be243be415b548d3af5862e7fdc7ddd27b00bd3e4369f5c914f576c5aa5a427
+
+===========================================================================================================================================================
+(Dockerfile with app properties pointing to prod)
+ 
+FROM maven:3.6-jdk-8-alpine as build
+ADD ./ app/
+WORKDIR /app
+RUN mvn install -Dspring.profiles.active=prod
+
+FROM openjdk:8-jdk-alpine
+COPY --from=build /app/target/SMM-server.jar SMM-server.jar
+EXPOSE 8761
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=prod","SMM-server.jar"]
+============================================================================================================================================================= 
+
